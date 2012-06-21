@@ -1,0 +1,12 @@
+#!/usr/bin/env python
+#-*- coding:utf-8 -*-
+
+import sys
+from skelpy import skelpy
+
+def main():
+	skelpy.args_config()
+	return 0
+
+if __name__ == '__main__':
+	sys.exit(main())

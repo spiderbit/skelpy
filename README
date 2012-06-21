@@ -1,0 +1,41 @@
+=======
+skelpy
+=======
+
+! not working yet !
+skelpy is a (python) tool that creates a new folder from a template
+
+License
+=======
+
+skelpy is free software and licensed under the GNU GPLv3 or later. You
+are welcome to change and redistribute it under certain conditions. For more
+information see the LICENSE file or visit http://www.gnu.org/licenses/gpl-3.0.html
+
+
+Requirements
+============
+
+   - python > 3.2.3
+
+Installation
+============
+
+Over PyPi
+---------
+	! not working yet !
+	> pip install skelpy
+
+
+Installing from source
+----------------------
+	! not working yet!
+	$ python setup.py install # may need to be root
+
+
+Usage
+=====
+
+<usage examples>
+
+Have fun!
