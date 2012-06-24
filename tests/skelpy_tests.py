@@ -77,13 +77,51 @@ class Test_SkelPy(object):
 		self.skel.create(name, 'proj1')
 		assert not os.path.isdir('proj1')
 
+	def check_files_exist(self, files):
+		for i in files:
+			files = os.listdir('.')
+			d = i[0]
+			f = i[1]
+			if d == None:
+				i.remove(None)
+			if f == None:
+				i.remove(None)
+			assert set(files) == set(i), "%s vs %s" % (files, i)
+			if d != None:
+				assert os.path.isdir(d)
+			if f != None:
+				assert os.path.isfile(f)
+			if d != None:
+				os.chdir(d)
+
+	def create_files(self, name, files):
+		os.mkdir(name)
+		os.chdir(name)
+		for i in files:
+			files = os.listdir('.')
+			d = i[0]
+			f = i[1]
+			if d == None:
+				i.remove(None)
+			if f == None:
+				i.remove(None)
+			if d != None:
+				os.mkdir(d)
+			if f != None:
+				with open(f, 'w') as fo:
+					fo.write("")
+			if d != None:
+				os.chdir(d)
+		os.chdir(self.temp_dir)
+
 	def test_create_dont_copy_ignore_files(self):
 		"""
 		checks if create dont copy files and dirs listed in the .skelpy/ignore file
 		"""
 		name='template1'
+		files =	[['a', 'file_a'],['b', 'file_b'],['c', 'file_c']]
+		self.create_files(name, files)
 		self.skel.init(name)
-		self.create_sample_template(name)
 		ignore_file = os.path.join(name, '.skelpy', 'ignore')
 		with open(ignore_file, 'w+') as f:
 			file_b = os.path.join('a','file_b') + "\n"
@@ -92,18 +130,16 @@ class Test_SkelPy(object):
 			f.write(path_c)
 		self.skel.create(name, 'proj1')
 		os.chdir('proj1')
-		for i in [['a', 'file_a'],['b', None],[None, 'file_c']]:
-			files = os.listdir('.')
-			d = i[0]
-			f = i[1]
-			if d == None:
-				i.remove(None)
-			if f == None:
-				i.remove(None)
-			assert set(files) == set(i), files
-			if d != None:
-				assert os.path.isdir(d)
-			if f != None:
-				assert os.path.isfile(f)
-			if d != None:
-				os.chdir(d)
+		files =	[['a', 'file_a'],['b', None],[None, 'file_c']]
+		self.check_files_exist(files)
+
+	def test_create_renames_files_with_keyword(self):
+		"""	checks that create renames dirs/files to proj-name """
+		name='template1'
+		files =	[['%project%', 'file_a'],['b', '%project%'],['%project%', 'file_c']]
+		self.create_files(name, files)
+		self.skel.init(name)
+		self.skel.create(name, 'proj1')
+		os.chdir('proj1')
+		files =	[['proj1', 'file_a'],['b', 'proj1'],['proj1', 'file_c']]
+		self.check_files_exist(files)

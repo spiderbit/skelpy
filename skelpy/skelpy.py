@@ -37,14 +37,18 @@ class SkelPy:
 				if root == source:
 					dirs.remove('.skelpy')
 				target_root = root.replace(source,target,1)
+				#filter names
+				target_root = target_root.replace('%project%', target)
+
 				for d in dirs:
 					for i in ignore_list:
 						root2 = root.replace(source, '', 1)[1:]
 						if os.path.join(root2, d).startswith(i):
 							break
 					else:
+						d_renamed = d.replace('%project%', target)
 						d_source = os.path.join(root, d)
-						d_target = os.path.join(target_root, d)
+						d_target = os.path.join(target_root, d_renamed)
 						os.mkdir(d_target)
 						shutil.copystat(d_source, d_target)
 				for f in files:
@@ -53,7 +57,8 @@ class SkelPy:
 						if os.path.join(root2, f).startswith(i):
 							break
 					else:
+						f_renamed = f.replace('%project%', target)
 						f_source = os.path.join(root, f)
-						f_target = os.path.join(target_root, f)
+						f_target = os.path.join(target_root, f_renamed)
 						assert f != 'c_file', f
 						shutil.copy(f_source, f_target)
