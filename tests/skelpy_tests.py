@@ -143,3 +143,12 @@ class Test_SkelPy(object):
 		os.chdir('proj1')
 		files =	[['proj1', 'file_a'],['b', 'proj1'],['proj1', 'file_c']]
 		self.check_files_exist(files)
+
+
+	def test_renames_strings_in_files_with_keyword(self):
+		"""	checks that create renames strings in files to proj-name """
+		#not yet implemented
+		pass
+
+	# maybe some tests for the cli client if it
+	# calls the right methods with the right args
