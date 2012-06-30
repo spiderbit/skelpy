@@ -52,7 +52,17 @@ class SkelPy:
 		config_dir = os.path.join(source, '.skelpy')
 		if os.path.isdir(config_dir):
 			ignore_list = self.read_ignore_file(config_dir)
-			os.mkdir(target)
+			if os.path.exists(target):
+				if os.path.isdir(target):
+					if os.listdir(target) == []:
+						pass
+					else:
+						raise ValueError('target isnt empty, '+\
+							'stopping to prevent data losts')
+				else:
+					raise NotImplementedError('...')
+			else:
+				os.mkdir(target)
 			for root, dirs, files in os.walk(source):
 				if root == source:
 					dirs.remove('.skelpy')

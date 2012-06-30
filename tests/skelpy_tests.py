@@ -52,14 +52,8 @@ class Test_SkelPy(object):
 			os.chdir(path)
 		os.chdir(self.temp_dir)
 
-	def test_create_copies_files(self):
-		""" checks if create copies directories and files """
-		name='template1'
-		self.skel.init(name)
-		self.create_sample_template(name)
-		self.skel.create(name, 'proj1')
-		assert os.path.isdir('proj1')
-		os.chdir('proj1')
+	def check_sample_template_output(self, name):
+		os.chdir(name)
 		for path in 'a','b','c':
 			files = os.listdir('.')
 			assert set(files) == set([path, "file_"+path]), files
@@ -68,6 +62,55 @@ class Test_SkelPy(object):
 			f = open('file_%s' % path, 'r')
 			assert '0123456789abcdef' == f.read(), f
 			os.chdir(path)
+
+
+	def test_create_copies_files(self):
+		""" checks if create copies directories and files """
+		name='template1'
+		self.skel.init(name)
+		self.create_sample_template(name)
+		self.skel.create(name, 'proj1')
+		assert os.path.isdir('proj1')
+		self.check_sample_template_output('proj1')
+
+
+
+	def test_create_does_use_empty_directory_as_target(self):
+		""" checks that create can use a empty folder as target """
+		name='template1'
+		self.skel.init(name)
+		self.create_sample_template(name)
+		#unclean_folder = os.path.join('proj1', 'test')
+		os.mkdir('proj1')
+		#os.mkdir(unclean_folder)
+		exception = None
+		try:
+			self.skel.create(name, 'proj1')
+		except Exception, err:
+			exception = True
+			assert False, err
+		assert exception == None
+		self.check_sample_template_output('proj1')
+
+	def test_create_doesnt_touch_non_empty_directory(self):
+		""" checks that create only accepts empty directories as target dir """
+		name='template1'
+		self.skel.init(name)
+		self.create_sample_template(name)
+		unclean_folder = os.path.join('proj1', 'test')
+		os.mkdir('proj1')
+		os.mkdir(unclean_folder)
+		exception = None
+		msg = 'target isnt empty, '+\
+			'stopping to prevent data losts'
+		try:
+			self.skel.create(name, 'proj1')
+		except ValueError as e:
+			exception = True
+			assert e.args[0] == msg, e.args[0]
+		assert exception
+		assert os.listdir('proj1') == ['test'], \
+			os.listdir('proj1')
 
 	def test_create_copies_only_from_templates(self):
 		""" checks if create only accepts templates as source """
