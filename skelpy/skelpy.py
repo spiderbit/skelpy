@@ -4,6 +4,26 @@
 import os
 import shutil
 
+
+def is_binary(filename):
+	"""Return true iff the given filename is binary.
+
+	Raises an EnvironmentError if the file does not exist or cannot be
+	accessed.
+	"""
+	fin = open(filename, 'rb')
+	try:
+		CHUNKSIZE = 1024
+		while 1:
+			chunk = fin.read(CHUNKSIZE)
+			if '\0' in chunk: # found null byte
+				return True
+			if len(chunk) < CHUNKSIZE:
+				break # done
+	finally:
+		fin.close()
+	return False
+
 class SkelPy:
 	def __init__(self):
 		pass
@@ -63,6 +83,8 @@ class SkelPy:
 						with open(f_source, 'r') as f1:
 							f_content = f1.read()
 						f_content = f_content.replace('%project%', target)
-						with open(f_target, 'w+') as f2:
-							f2.write(f_content)
-						#shutil.copy(f_source, f_target)
+						if is_binary(f_source):
+							shutil.copy(f_source, f_target)
+						else:
+							with open(f_target, 'w+') as f2:
+								f2.write(f_content)

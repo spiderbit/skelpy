@@ -159,6 +159,28 @@ class Test_SkelPy(object):
 		with open(f, 'r') as fo:
 			assert 'proj1' == fo.read()
 
+	def test_that_binary_files_get_copied(self):
+		""" checks that binary files get copied """
+		name='template1'
+		os.mkdir(name)
+		f = os.path.join(name, 'file_one')
+		ar=[1,2,3,255,0,1]
+		with open(f, 'wb+') as fo:
+			for i in ar:
+				fo.write(chr(i))
+		self.skel.init(name)
+		self.skel.create(name, 'proj1')
+		f = os.path.join('proj1', 'file_one')
+		assert os.path.isfile(f)
+		ar2 = []
+		with open(f, "rb") as f:
+			byte=f.read(1)
+			ar2.append(byte)
+			while byte != "":
+				byte=f.read(1)
+				ar2.append(byte)
+		chr_bytes = ['\x01', '\x02', '\x03', '\xff', '\x00', '\x01', '']
+		assert chr_bytes == ar2, ar2
 
 	# maybe some tests for the cli client if it
 	# calls the right methods with the right args
