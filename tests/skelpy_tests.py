@@ -94,7 +94,7 @@ class Test_SkelPy(object):
 			if d != None:
 				os.chdir(d)
 
-	def create_files(self, name, files):
+	def create_files(self, name, files, fcontent=""):
 		os.mkdir(name)
 		os.chdir(name)
 		for i in files:
@@ -109,7 +109,7 @@ class Test_SkelPy(object):
 				os.mkdir(d)
 			if f != None:
 				with open(f, 'w') as fo:
-					fo.write("")
+					fo.write(fcontent)
 			if d != None:
 				os.chdir(d)
 		os.chdir(self.temp_dir)
@@ -134,7 +134,7 @@ class Test_SkelPy(object):
 		self.check_files_exist(files)
 
 	def test_create_renames_files_with_keyword(self):
-		"""	checks that create renames dirs/files to proj-name """
+		""" checks that create renames dirs/files to proj-name """
 		name='template1'
 		files =	[['%project%', 'file_a'],['b', '%project%'],['%project%', 'file_c']]
 		self.create_files(name, files)
@@ -146,9 +146,19 @@ class Test_SkelPy(object):
 
 
 	def test_renames_strings_in_files_with_keyword(self):
-		"""	checks that create renames strings in files to proj-name """
-		#not yet implemented
-		pass
+		""" checks that create renames strings in files to proj-name """
+		name='template1'
+		os.mkdir(name)
+		f = os.path.join(name, 'file_one')
+		with open(f, 'w') as fo:
+			fo.write('%project%')
+		self.skel.init(name)
+		self.skel.create(name, 'proj1')
+		f = os.path.join('proj1', 'file_one')
+		assert os.path.isfile(f)
+		with open(f, 'r') as fo:
+			assert 'proj1' == fo.read()
+
 
 	# maybe some tests for the cli client if it
 	# calls the right methods with the right args

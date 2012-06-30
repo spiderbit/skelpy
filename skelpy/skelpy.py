@@ -60,5 +60,9 @@ class SkelPy:
 						f_renamed = f.replace('%project%', target)
 						f_source = os.path.join(root, f)
 						f_target = os.path.join(target_root, f_renamed)
-						assert f != 'c_file', f
-						shutil.copy(f_source, f_target)
+						with open(f_source, 'r') as f1:
+							f_content = f1.read()
+						f_content = f_content.replace('%project%', target)
+						with open(f_target, 'w+') as f2:
+							f2.write(f_content)
+						#shutil.copy(f_source, f_target)
