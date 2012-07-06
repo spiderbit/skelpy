@@ -2,7 +2,6 @@
 skelpy
 =======
 
-! not working yet !
 skelpy is a (python) tool that creates a new folder from a template
 
 License
@@ -16,7 +15,7 @@ information see the LICENSE file or visit http://www.gnu.org/licenses/gpl-3.0.ht
 Requirements
 ============
 
-   - python > 3.2.3
+   - python >= 2.7
 
 Installation
 ============
@@ -36,6 +35,70 @@ Installing from source
 Usage
 =====
 
-<usage examples>
+! at the moment instead of the skelpy command
+! use the starter script in this folder
+! just use it like descriped here but instead of:
+! skelpy... use ./starter...
+
+Create a template:
+------------------
+
+	> mkdir template1
+	> cd template1
+	> <create some files/directories>
+	> everywhere where a file/directory/name
+	  or a string should be replaced
+	  by the projects name replace it with:
+	  %project%
+
+	  as example you could call a folder:
+	  directory_%project%_1
+
+	  or you could choose a filename:
+	  Readme_%project%.txt
+
+	  also you can use this substitude
+	  in this or other files like that:
+
+	  This is the readme file of the project %project%!
+	  If you want to install %project% call the installer:
+	  install_%project%.sh
+
+	  To mark it for skelpy as template now run:
+	  > skelpy init .
+
+
+Generate a project based on this template:
+------------------------------------------
+
+	  > skelpy create <path_of_the_template> <path_of_new_project>
+	  in this example:
+	  > skelpy create . ~/projects/myFirstProject
+
+
+Result:
+-------
+
+	  now you got a copy of the template-dir except
+	  the %project% substitudes got replaced
+	  by the string: "myFirstProject"
+
+
+Additional Features:
+====================
+
+After a template is created, init creates a .skelpy directory
+in the templates directory. you can create there a ignore file,
+where you can add paths to files/directories that should not be
+used for creating projects.
+
+So if you as example want to manage the template with git,
+but you dont want to use the history of the template in your
+projects, you could ignore the .git directory with the command:
+
+echo ".git" > .skelpy/ignore
+
+
+Hope someone else than me finds this tool useful, too.
 
 Have fun!

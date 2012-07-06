@@ -1,10 +1,13 @@
 from nose.tools import *
 from os import environ as env
 from skelpy.skelpy import SkelPy
+from skelpy.arg_parser import ArgParser
 import tempfile
 import shutil
 import os
 from time import sleep
+from mock import MagicMock, patch, Mock
+
 
 class Test_SkelPy(object):
 
@@ -225,5 +228,22 @@ class Test_SkelPy(object):
 		chr_bytes = ['\x01', '\x02', '\x03', '\xff', '\x00', '\x01', '']
 		assert chr_bytes == ar2, ar2
 
-	# maybe some tests for the cli client if it
-	# calls the right methods with the right args
+	def test_cmd_init_calls_init_method_with_path_as_arg(self):
+		""" tests that a init command with a path calls the right method """
+		mock = Mock()
+		parser = ArgParser(['./skelpy-test-call', 'init', '.'])
+		parser.skel = mock
+		parser.parse()
+		parser.exec_cmd()
+		mock.init.assert_called_once_with('.')
+
+	def test_cmd_create_calls_create_method_with_right_args(self):
+		""" tests that a create command calls right method with right args"""
+		mock = Mock()
+		parser = ArgParser(['./skelpy-test-call', 'create', 'path1', 'path2'])
+		parser.skel = mock
+		parser.parse()
+		parser.exec_cmd()
+		mock.create.assert_called_once_with('path1', 'path2')
+
+
