@@ -77,6 +77,37 @@ class Test_SkelPy(object):
 		self.check_sample_template_output('proj1')
 
 
+	def test_create_works_with_seperator_after_source_string(self):
+		"""
+		checks if create works with seperator at the end
+		of the source string
+		"""
+		name='template1'
+		os.mkdir(name)
+		self.skel.init('template1')
+		self.create_sample_template(name)
+		with open(os.path.join(name, 'test'), 'w+') as f:
+			f.write('0123456789abcdef')
+		self.skel.create('%s/'%(name), 'proj1')
+		assert os.path.isdir('proj1')
+		assert os.path.isfile(os.path.join('proj1', 'test'))
+
+
+	def test_create_works_with_seperator_after_target_string(self):
+		"""
+		checks if create works with seperator at the end
+		of the target string
+		"""
+		name='template1'
+		os.mkdir(name)
+		self.skel.init('template1')
+		self.create_sample_template(name)
+		with open(os.path.join(name, '%project%'), 'w+') as f:
+			f.write('0123456789abcdef')
+		self.skel.create(name, 'proj1/')
+		assert os.path.isdir('proj1')
+		assert os.path.isfile(os.path.join('proj1', 'proj1'))
+
 
 	def test_create_does_use_empty_directory_as_target(self):
 		""" checks that create can use a empty folder as target """
@@ -122,6 +153,7 @@ class Test_SkelPy(object):
 		self.create_sample_template(name)
 		self.skel.create(name, 'proj1')
 		assert not os.path.isdir('proj1')
+
 
 	def check_files_exist(self, files):
 		for i in files:
@@ -245,5 +277,3 @@ class Test_SkelPy(object):
 		parser.parse()
 		parser.exec_cmd()
 		mock.create.assert_called_once_with('path1', 'path2')
-
-

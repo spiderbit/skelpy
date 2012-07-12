@@ -49,6 +49,8 @@ class SkelPy:
 
 	def create(self, source, target):
 		""" creates a new directory from the template """
+		source = os.path.normpath(source)
+		target = os.path.normpath(target)
 		config_dir = os.path.join(source, '.skelpy')
 		if os.path.isdir(config_dir):
 			ignore_list = self.read_ignore_file(config_dir)
